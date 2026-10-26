@@ -25,6 +25,16 @@ def test_plan_rejects_bad_input():
     assert res.status_code == 422
 
 
+def test_plan_has_expected_shape():
+    res = client.post("/api/plan", json={"budget": 250, "rooms": 3})
+    assert res.status_code == 200
+    body = res.json()
+    assert body["budget"] == 250
+    assert body["total_allocated"] == 250
+    assert len(body["rooms"]) == 3
+    assert all(room["budget"] > 0 for room in body["rooms"])
+
+
 def test_allocate_sums_exactly():
     for budget in (1, 99.99, 333.33, 1000):
         for rooms in range(1, 13):
