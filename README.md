@@ -1,3 +1,4 @@
 # Hacktober 2026
 
-Teamates: Thomas Petersen, Camdyn Cregger, 
+Teamates: Thomas Petersen, Camdyn Cregger, Phillip Lee
+
