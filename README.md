@@ -49,3 +49,7 @@ App: http://localhost:5173
 cd backend
 .venv/Scripts/python -m pytest
 ```
+
+## Credits
+
+Pumpkin, bat, ghost, spider, web and other icons are from [Twemoji](https://github.com/jdecked/twemoji), licensed CC-BY 4.0. Fonts are Creepster, Pirata One and Grenze from Google Fonts (SIL Open Font License).

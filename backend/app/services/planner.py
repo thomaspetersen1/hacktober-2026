@@ -26,5 +26,6 @@ def build_plan(req: PlanRequest) -> PlanResponse:
         theme="Untitled Haunt",
         budget=req.budget,
         total_allocated=round(sum(budgets), 2),
+        square_feet=req.square_feet,
         rooms=rooms,
     )

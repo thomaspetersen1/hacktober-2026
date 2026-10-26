@@ -25,6 +25,14 @@ def test_plan_rejects_bad_input():
     assert res.status_code == 422
 
 
+def test_plan_square_feet_is_optional():
+    res = client.post("/api/plan", json={"budget": 500, "rooms": 4, "square_feet": 1200})
+    assert res.status_code == 200
+    assert res.json()["square_feet"] == 1200
+    res = client.post("/api/plan", json={"budget": 500, "rooms": 4, "square_feet": 0})
+    assert res.status_code == 422
+
+
 def test_allocate_sums_exactly():
     for budget in (1, 99.99, 333.33, 1000):
         for rooms in range(1, 13):

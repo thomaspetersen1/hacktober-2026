@@ -57,10 +57,12 @@ Requirements for both tracks:
 frontend/                  Vite + React (JS)
   vite.config.js           dev proxy: /api -> http://localhost:8000
   src/api/client.js        all fetch calls to the backend go through here
-  src/App.jsx              planner form + results
+  src/App.jsx              home page: hero, planner form, results
+  src/components/          NightSky (animated backdrop), PlanForm (tombstone form)
+  public/images/           Twemoji SVGs (CC-BY 4.0) for pumpkins, bats, etc.
 backend/                   FastAPI (Python)
   app/main.py              app, CORS, /api/health
-  app/config.py            Settings from env / backend/.env
+  app/config.py            Settings from the root .env
   app/schemas.py           Pydantic request/response models (the API contract)
   app/routers/plan.py      POST /api/plan
   app/services/budget.py   deterministic budget allocation (no LLM math)
@@ -93,7 +95,7 @@ On macOS/Linux, use `.venv/bin/python` instead of `.venv/Scripts/python`.
 ## API contract
 
 - `GET /api/health` returns `{status, snowflake_configured}`.
-- `POST /api/plan` takes `{budget, rooms}` (budget > 0, rooms 1–12) and returns `{theme, budget, total_allocated, rooms: [{order, name, concept, budget}]}`.
+- `POST /api/plan` takes `{budget, rooms, square_feet?}` (budget > 0, rooms 1–12, square_feet optional and > 0) and returns `{theme, budget, total_allocated, square_feet, rooms: [{order, name, concept, budget}]}`.
 - When you change `backend/app/schemas.py`, update `frontend/src/api/client.js` and the UI to match.
 
 ## Conventions

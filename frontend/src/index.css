@@ -1,37 +1,50 @@
+/* The haunt is always at night, so there is a single dark palette. */
 :root {
-  --bg: #fdf8f2;
-  --surface: #ffffff;
-  --text: #1f1a17;
-  --muted: #6b625b;
-  --border: #e4dbd2;
-  --accent: #d9580d;
-  --accent-contrast: #ffffff;
-  --success: #2f7d32;
-  --danger: #b3261e;
+  --sky-top: #0b0418;
+  --sky-mid: #22093f;
+  --sky-low: #3a0f5c;
+  --silhouette: #07020e;
 
-  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --stone: #2a1446;
+  --stone-edge: #4b2775;
+  --text: #f6ecff;
+  --muted: #bda7d9;
+  --pumpkin: #ff7518;
+  --pumpkin-hot: #ffb347;
+  --pumpkin-deep: #c2410c;
+  --slime: #9cff57;
+  --blood: #ff4d6d;
+
+  --font-display: 'Creepster', 'Pirata One', cursive;
+  --font-label: 'Pirata One', 'Grenze', serif;
+  --font-body: 'Grenze', Georgia, serif;
+
+  font-family: var(--font-body);
+  font-size: 18px;
   line-height: 1.5;
-  color-scheme: light dark;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #121014;
-    --surface: #1d1a20;
-    --text: #f2ece6;
-    --muted: #a59d96;
-    --border: #322d36;
-    --accent: #ff7a1a;
-    --accent-contrast: #121014;
-    --success: #6fcf73;
-    --danger: #ff6b5e;
-  }
+  color: var(--text);
+  color-scheme: dark;
 }
 
 * { box-sizing: border-box; }
 
 body {
   margin: 0;
-  background: var(--bg);
+  min-height: 100vh;
+  background: var(--sky-top);
   color: var(--text);
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--pumpkin);
+  color: var(--sky-top);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
 }
