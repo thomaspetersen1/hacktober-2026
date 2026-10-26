@@ -1,0 +1,81 @@
+.app {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.status {
+  font-size: 0.875rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid currentColor;
+}
+.status-online { color: var(--success); }
+.status-offline { color: var(--danger); }
+.status-checking { color: var(--muted); }
+
+.plan-form {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  margin: 2rem 0;
+}
+
+.plan-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
+.plan-form input {
+  font: inherit;
+  padding: 0.5rem 0.75rem;
+  width: 10rem;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+.plan-form button {
+  font: inherit;
+  padding: 0.55rem 1.25rem;
+  background: var(--accent);
+  color: var(--accent-contrast);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.plan-form button:disabled { opacity: 0.6; cursor: wait; }
+
+.error { color: var(--danger); }
+
+.rooms {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.room-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem;
+}
+.room-card h3 { margin: 0 0 0.5rem; }
+.room-budget { font-weight: 600; color: var(--accent); }
+
+.total { color: var(--muted); }

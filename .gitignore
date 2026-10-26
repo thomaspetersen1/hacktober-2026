@@ -1,0 +1,21 @@
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+
+# Node (frontend/.gitignore covers the rest)
+node_modules/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+
+.claude/
