@@ -43,6 +43,43 @@ npm run dev
 
 App: http://localhost:5173
 
+## Form API
+
+The planner form submits its budget and room count to `POST /api/plan`.
+The backend validates the values, splits the budget deterministically, and
+returns the generated plan.
+
+Request:
+
+```json
+{
+  "budget": 500,
+  "rooms": 1
+}
+```
+
+Successful response (`200 OK`):
+
+```json
+{
+  "theme": "Untitled Haunt",
+  "budget": 500,
+  "total_allocated": 500,
+  "rooms": [
+    {
+      "order": 1,
+      "name": "Room 1",
+      "concept": "Concept coming soon from the ideas stage.",
+      "budget": 500
+    }
+  ]
+}
+```
+
+`budget` must be greater than zero, and `rooms` must be between 1 and 12.
+Invalid input returns `422 Unprocessable Entity`. The response contains one
+room entry per requested room.
+
 ### Tests
 
 ```bash
