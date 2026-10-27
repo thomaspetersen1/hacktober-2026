@@ -22,3 +22,10 @@ class PlanResponse(BaseModel):
     total_allocated: float
     square_feet: float | None = None
     rooms: list[Room]
+
+
+class RerollRequest(BaseModel):
+    theme: str
+    order: int = Field(ge=1, le=12, description="Position of the room being replaced")
+    budget: float = Field(gt=0, description="That room's budget in USD, kept as-is")
+    avoid: list[str] = Field(default_factory=list, description="Room names already in the house")
