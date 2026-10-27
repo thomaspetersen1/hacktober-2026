@@ -67,6 +67,10 @@ backend/                   FastAPI (Python)
   app/routers/plan.py      POST /api/plan
   app/services/budget.py   deterministic budget allocation (no LLM math)
   app/services/planner.py  pipeline: ideas -> sourcing -> cohesion
+  app/services/catalog.py  props + prices: Snowflake PROPS table, falls back to data/props.csv
+  app/services/sourcing.py fits props into each room's budget (whole cents)
+  app/services/cohesion.py whole-house checks -> plain-English warnings
+  data/props.csv           local props catalog (same columns as the Snowflake table)
   app/services/snowflake_client.py  cached Snowpark session
   tests/                   pytest
 .claude/launch.json        dev server configs (backend :8000, frontend :5173)
@@ -95,8 +99,11 @@ On macOS/Linux, use `.venv/bin/python` instead of `.venv/Scripts/python`.
 ## API contract
 
 - `GET /api/health` returns `{status, snowflake_configured}`.
-- `POST /api/plan` takes `{budget, rooms, square_feet?}` (budget > 0, rooms 1–12, square_feet optional and > 0) and returns `{theme, budget, total_allocated, square_feet, rooms: [{order, name, concept, budget}]}`.
-- `POST /api/rooms/reroll` takes `{theme, order, budget, avoid: [room names]}` and returns one replacement room `{order, name, concept, budget}`.
+- `POST /api/plan` takes `{budget, rooms, square_feet?}` (budget > 0, rooms 1–12, square_feet optional and > 0) and returns `{theme, story, budget, total_allocated, total_spent, square_feet, catalog_source, warnings: [str], rooms: [Room]}`.
+  - `Room` is `{order, name, concept, scare, budget, spent, square_feet, items: [{id, name, category, unit_price, quantity, line_total}]}`.
+  - `catalog_source` is `"snowflake"` or `"local"` (backend/data/props.csv).
+- `POST /api/rooms/reroll` takes `{theme, order, budget, avoid: [room names], square_feet?}` and returns one replacement `Room` with its props.
+- `GET /api/catalog` returns `{source, count, props: [{id, name, category, theme, price}]}`.
 - When you change `backend/app/schemas.py`, update `frontend/src/api/client.js` and the UI to match.
 
 ## Conventions

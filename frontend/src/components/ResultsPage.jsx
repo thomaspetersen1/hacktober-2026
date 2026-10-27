@@ -18,7 +18,8 @@ function normalizeItem(item) {
 }
 
 function withItems(room) {
-  const sample = !room.items?.length
+  // Rooms from an older backend have no items list; [] means nothing fit the budget
+  const sample = !Array.isArray(room.items)
   const items = (sample ? sampleItems(room) : room.items).map(normalizeItem)
   const spentCents = items.reduce((sum, item) => sum + Math.round(item.line_total * 100), 0)
   return { ...room, items, sample, spent: spentCents / 100, theme: roomTheme(room) }

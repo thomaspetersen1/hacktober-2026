@@ -22,6 +22,11 @@ class Settings(BaseSettings):
     snowflake_database: str = ""
     snowflake_schema: str = ""
 
+    # Where prop prices come from: "auto" tries Snowflake then the local CSV,
+    # "local" skips Snowflake, "snowflake" fails loudly if it can't connect.
+    catalog_source: str = "auto"
+    props_table: str = "PROPS"
+
     cortex_model: str = "llama3.1-70b"
 
     ollama_host: str = "http://localhost:11434"
