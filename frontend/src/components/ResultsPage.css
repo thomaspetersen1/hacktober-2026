@@ -18,6 +18,7 @@
   animation: rise 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
 }
 .back {
+  justify-self: start;
   padding: 0.45rem 0.9rem;
   font: inherit;
   font-family: var(--font-label);
@@ -158,12 +159,15 @@
 
 /* ---------- the ring of rooms ---------- */
 .cycle {
-  --ring: min(92vw, calc(100svh - 215px), 720px);
+  /* How far the top and bottom room cards poke past the ring, as a share of it.
+     The ring shrinks to make room for both, so the page still never scrolls. */
+  --overhang: max(0, var(--node) * 0.53 - 0.1);
+  --ring: min(92vw, calc((100svh - 225px) / (1 + 2 * var(--overhang))), 720px);
   position: relative;
   flex: none;
   width: var(--ring);
   aspect-ratio: 1;
-  margin-top: clamp(0.25rem, 1.5vh, 1rem);
+  margin-top: calc(var(--ring) * var(--overhang) + clamp(0.4rem, 1.5vh, 1rem));
 }
 
 .cycle-path {
@@ -248,7 +252,17 @@
   color: var(--pumpkin);
   text-shadow: 0 0 24px rgba(255, 117, 24, 0.6);
 }
-.cycle-story { margin: 0 0 0.5rem; font-size: 0.95rem; color: var(--text); }
+.cycle-story {
+  display: -webkit-box;
+  margin: 0 0 0.5rem;
+  overflow: hidden;
+  font-size: 0.95rem;
+  color: var(--text);
+  /* stories are one line now, but never let a long one spill over the rooms */
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+}
 .cycle-hint {
   margin: 0;
   font-size: 0.9rem;
@@ -518,6 +532,7 @@
     --ring: 100%;
     width: 100%;
     aspect-ratio: auto;
+    margin-top: 1rem;
   }
   .cycle-path, .walker, .gap-label { display: none; }
   .cycle-center {

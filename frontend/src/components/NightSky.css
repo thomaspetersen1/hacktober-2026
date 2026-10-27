@@ -83,15 +83,22 @@
 }
 
 /* ---------- webs + spider ---------- */
+/* Each web is tipped 45° with its hub tucked into the corner, so it stretches
+   diagonally across it, and sways a little as if there's a draft. */
 .web {
   position: absolute;
-  top: -18px;
-  width: clamp(120px, 16vw, 220px);
+  top: 0;
+  width: clamp(170px, 20vw, 280px);
   opacity: 0.55;
   filter: brightness(1.6) drop-shadow(0 0 6px rgba(220, 190, 255, 0.4));
+  animation: web-sway 7s ease-in-out infinite alternate;
 }
-.web-left { left: -18px; }
-.web-right { right: -18px; transform: scaleX(-1); }
+.web-left { left: 0; translate: -36% -36%; --tilt: 45deg; }
+.web-right { right: 0; translate: 36% -36%; scale: -1 1; --tilt: -45deg; animation-delay: -3.5s; }
+@keyframes web-sway {
+  from { rotate: calc(var(--tilt) - 5deg); }
+  to { rotate: calc(var(--tilt) + 5deg); }
+}
 
 .spider {
   position: absolute;
@@ -267,6 +274,23 @@
   left: 84.5%;
   width: 54px;
   filter: drop-shadow(0 0 8px rgba(186, 104, 255, 0.6));
+  transform-origin: bottom center;
+  /* prowl moves it along the patch and turns it around; waddle is the steps */
+  animation:
+    prowl 22s ease-in-out infinite,
+    waddle 0.45s ease-in-out infinite alternate;
+}
+/* The cat faces left, so it walks left first, sits, turns, and walks home. */
+@keyframes prowl {
+  0%, 8% { translate: 0 0; scale: 1 1; }
+  40%, 52% { translate: -16vw 0; scale: 1 1; }
+  53%, 58% { translate: -16vw 0; scale: -1 1; }
+  90%, 99% { translate: 0 0; scale: -1 1; }
+  100% { translate: 0 0; scale: 1 1; }
+}
+@keyframes waddle {
+  from { rotate: -3deg; }
+  to { rotate: 3deg; }
 }
 
 /* ---------- film grain ---------- */
