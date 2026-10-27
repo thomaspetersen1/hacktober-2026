@@ -49,7 +49,10 @@ def get_session() -> Session:
     return _session
 
 
-def run_query(sql: str) -> list:
-    """Single entry point so concurrent requests never share a session race."""
+def run_query(sql: str, params: list | None = None) -> list:
+    """Single entry point so concurrent requests never share a session race.
+
+    Pass values as `params` (bound to ? placeholders), never by formatting them into sql.
+    """
     with _lock:
-        return get_session().sql(sql).collect()
+        return get_session().sql(sql, params=params).collect()

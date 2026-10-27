@@ -1,5 +1,7 @@
 import os
 
-# Tests always use backend/data/props.csv, even if .env has Snowflake set up.
+# Tests never touch Snowflake, even if .env has it set up: props come from backend/data/props.csv...
 # Set before app.config is imported so the cached settings pick it up.
 os.environ["CATALOG_SOURCE"] = "local"
+# ...and the fixed house instead of calling the LLM
+os.environ["IDEAS_SOURCE"] = "fixed"

@@ -27,7 +27,11 @@ class Settings(BaseSettings):
     catalog_source: str = "auto"
     props_table: str = "PROPS"
 
-    cortex_model: str = "llama3.1-70b"
+    # Open-weight model for the ideas stage, served by Cortex AI_COMPLETE.
+    # IDEAS_SOURCE: "auto" uses Cortex when Snowflake is set up, else the fixed house;
+    # "fixed" never calls the LLM; "ai" fails loudly instead of falling back.
+    cortex_model: str = "llama3.3-70b"
+    ideas_source: str = "auto"
 
     ollama_host: str = "http://localhost:11434"
     ollama_model: str = "llama3.1"

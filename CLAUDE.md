@@ -67,6 +67,7 @@ backend/                   FastAPI (Python)
   app/routers/plan.py      POST /api/plan
   app/services/budget.py   deterministic budget allocation (no LLM math)
   app/services/planner.py  pipeline: ideas -> sourcing -> cohesion
+  app/services/ideas.py    theme, story, rooms from Llama via Cortex AI_COMPLETE; fixed house fallback
   app/services/catalog.py  props + prices: Snowflake PROPS table, falls back to data/props.csv
   app/services/sourcing.py fits props into each room's budget (whole cents)
   app/services/cohesion.py whole-house checks -> plain-English warnings
@@ -99,9 +100,11 @@ On macOS/Linux, use `.venv/bin/python` instead of `.venv/Scripts/python`.
 ## API contract
 
 - `GET /api/health` returns `{status, snowflake_configured}`.
-- `POST /api/plan` takes `{budget, rooms, square_feet?}` (budget > 0, rooms 1–12, square_feet optional and > 0) and returns `{theme, story, budget, total_allocated, total_spent, square_feet, catalog_source, warnings: [str], rooms: [Room]}`.
-  - `Room` is `{order, name, concept, scare, budget, spent, square_feet, items: [{id, name, category, unit_price, quantity, line_total}]}`.
+- `POST /api/plan` takes `{budget, rooms, square_feet?}` (budget > 0, rooms 1–12, square_feet optional and > 0) and returns `{theme, story, budget, total_allocated, total_spent, square_feet, catalog_source, ideas_source, ai_model, warnings: [str], rooms: [Room]}`.
+  - `Room` is `{order, name, concept, scare, theme_key, budget, spent, square_feet, items: [{id, name, category, unit_price, quantity, line_total}]}`.
   - `catalog_source` is `"snowflake"` or `"local"` (backend/data/props.csv).
+  - `ideas_source` is `"ai"` (Cortex `AI_COMPLETE`, model in `ai_model`) or `"fixed"` (the hand-written fallback house).
+  - `theme_key` is the room's prop/image tag (e.g. `witch`, `skull`), chosen by the LLM; the frontend uses it to pick the room's picture.
 - `POST /api/rooms/reroll` takes `{theme, order, budget, avoid: [room names], square_feet?}` and returns one replacement `Room` with its props.
 - `GET /api/catalog` returns `{source, count, props: [{id, name, category, theme, price}]}`.
 - When you change `backend/app/schemas.py`, update `frontend/src/api/client.js` and the UI to match.

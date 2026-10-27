@@ -36,6 +36,9 @@ const THEMES = [
 const FALLBACK = { key: 'ghost', image: noto('1f47b'), animated: true, emoji: '👻' }
 
 export function roomTheme(room) {
+  // The backend tags each room (the LLM picks it), so prefer that over guessing
+  const tagged = THEMES.find((t) => t.key === room.theme_key)
+  if (tagged) return tagged
   const words = `${room.name} ${room.concept}`.toLowerCase().split(/[^a-zé]+/)
   // Match whole-word prefixes, so "bat" hits "bats" but not "battery".
   return THEMES.find((t) => words.some((w) => t.match.test(w))) ?? FALLBACK

@@ -4,7 +4,7 @@ from fastapi.testclient import TestClient
 from app.main import app
 from app.schemas import Prop
 from app.services import catalog
-from app.services.planner import ROOM_NAMES
+from app.services.ideas import ROOM_NAMES
 from app.services.sourcing import pick_items, spent
 
 client = TestClient(app)

@@ -37,6 +37,7 @@ class Room(BaseModel):
     name: str
     concept: str
     scare: str | None = None
+    theme_key: str | None = Field(default=None, description="Prop/image tag, e.g. 'witch' or 'skull'")
     budget: float
     spent: float = 0
     square_feet: float | None = None
@@ -51,6 +52,8 @@ class PlanResponse(BaseModel):
     total_spent: float = 0
     square_feet: float | None = None
     catalog_source: Literal["snowflake", "local"] = "local"
+    ideas_source: Literal["ai", "fixed"] = "fixed"
+    ai_model: str | None = None
     warnings: list[str] = Field(default_factory=list)
     rooms: list[Room]
 
