@@ -96,6 +96,7 @@ On macOS/Linux, use `.venv/bin/python` instead of `.venv/Scripts/python`.
 
 - `GET /api/health` returns `{status, snowflake_configured}`.
 - `POST /api/plan` takes `{budget, rooms, square_feet?}` (budget > 0, rooms 1–12, square_feet optional and > 0) and returns `{theme, budget, total_allocated, square_feet, rooms: [{order, name, concept, budget}]}`.
+- `POST /api/rooms/reroll` takes `{theme, order, budget, avoid: [room names]}` and returns one replacement room `{order, name, concept, budget}`.
 - When you change `backend/app/schemas.py`, update `frontend/src/api/client.js` and the UI to match.
 
 ## Conventions

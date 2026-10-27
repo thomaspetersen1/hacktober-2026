@@ -1,31 +1,45 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { createPlan } from './api/client.js'
+import ErrorScreen from './components/ErrorScreen.jsx'
+import LoadingScreen from './components/LoadingScreen.jsx'
 import NightSky from './components/NightSky.jsx'
 import PlanForm from './components/PlanForm.jsx'
+import ResultsPage from './components/ResultsPage.jsx'
 import './App.css'
 
-const currency = new Intl.NumberFormat('en-US', {
-  style: 'currency',
-  currency: 'USD',
-})
+// Keep the loading screen up long enough to read, even when the backend is instant.
+const MIN_LOADING_MS = 2400
+const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
 function App() {
   const [plan, setPlan] = useState(null)
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
-  const resultsRef = useRef(null)
+  const [lastRequest, setLastRequest] = useState(null)
 
+  // The browser's back button returns from the results to the form.
   useEffect(() => {
-    if (plan) resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-  }, [plan])
+    const handlePop = () => setPlan(null)
+    window.addEventListener('popstate', handlePop)
+    return () => window.removeEventListener('popstate', handlePop)
+  }, [])
+
+  function handleReset() {
+    if (window.history.state?.results) window.history.back()
+    else setPlan(null)
+  }
 
   async function handleSubmit(request) {
     setLoading(true)
     setError(null)
+    setLastRequest(request)
     try {
-      setPlan(await createPlan(request))
+      const [result] = await Promise.all([createPlan(request), wait(MIN_LOADING_MS)])
+      setPlan(result)
+      window.history.pushState({ results: true }, '')
+      window.scrollTo(0, 0)
     } catch (err) {
-      setError(err.message)
+      setError(err)
     } finally {
       setLoading(false)
     }
@@ -34,49 +48,29 @@ function App() {
   return (
     <>
       <NightSky />
+      {loading && <LoadingScreen />}
+      {error && (
+        <ErrorScreen error={error} onRetry={() => handleSubmit(lastRequest)} onBack={() => setError(null)} />
+      )}
 
       <main className="app">
-        <section className="hero">
-          <div className="hero-copy">
-            <p className="eyebrow">
-              <img src="/images/candle.svg" alt="" /> Hacktober 2026 · Est. Oct 31
-            </p>
-            <h1 className="title">
-              <span className="title-top">Haunted</span>
-              <span className="title-bottom">
-                House <em>Planner</em>
-              </span>
-            </h1>
-          
-          </div>
+        {plan ? (
+          <ResultsPage plan={plan} onReset={handleReset} onPlanChange={setPlan} />
+        ) : (
+          <section className="hero">
+            <div className="hero-copy">
+              <p className="eyebrow">
+                <img src="/images/candle.svg" alt="" /> Hacktober 2026 · Est. Oct 31
+              </p>
+              <h1 className="title">
+                <span className="title-top">Haunted</span>
+                <span className="title-bottom">
+                  House <em>Planner</em>
+                </span>
+              </h1>
+            </div>
 
-          <PlanForm onSubmit={handleSubmit} loading={loading} />
-        </section>
-
-        {error && (
-          <p className="error" role="alert">
-            <img src="/images/skull.svg" alt="" /> {error}
-          </p>
-        )}
-
-        {plan && (
-          <section className="plan" ref={resultsRef}>
-            <h2>{plan.theme}</h2>
-            <ol className="rooms">
-              {plan.rooms.map((room) => (
-                <li key={room.order} className="room-card" style={{ animationDelay: `${room.order * 90}ms` }}>
-                  <span className="room-number">{room.order}</span>
-                  <h3>{room.name}</h3>
-                  <p>{room.concept}</p>
-                  <p className="room-budget">{currency.format(room.budget)}</p>
-                </li>
-              ))}
-            </ol>
-            <p className="total">
-              Total allocated: {currency.format(plan.total_allocated)} of{' '}
-              {currency.format(plan.budget)}
-              {plan.square_feet && <> · {plan.square_feet.toLocaleString()} sq ft</>}
-            </p>
+            <PlanForm onSubmit={handleSubmit} loading={loading} />
           </section>
         )}
       </main>

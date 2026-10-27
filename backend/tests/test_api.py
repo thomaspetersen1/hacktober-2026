@@ -39,3 +39,21 @@ def test_allocate_sums_exactly():
     for budget in (1, 99.99, 333.33, 1000):
         for rooms in range(1, 13):
             assert round(sum(allocate(budget, rooms)), 2) == round(budget, 2)
+
+
+def test_reroll_returns_a_new_room_with_same_slot():
+    avoid = ["Entry Hall", "Mirror Gallery", "Whispering Nursery"]
+    res = client.post(
+        "/api/rooms/reroll",
+        json={"theme": "Midnight Manor", "order": 2, "budget": 120.5, "avoid": avoid},
+    )
+    assert res.status_code == 200
+    room = res.json()
+    assert room["order"] == 2
+    assert room["budget"] == 120.5
+    assert room["name"] not in avoid
+
+
+def test_reroll_rejects_bad_input():
+    res = client.post("/api/rooms/reroll", json={"theme": "x", "order": 0, "budget": 10})
+    assert res.status_code == 422

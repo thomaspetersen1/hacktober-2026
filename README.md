@@ -90,3 +90,5 @@ cd backend
 ## Credits
 
 Pumpkin, bat, ghost, spider, web and other icons are from [Twemoji](https://github.com/jdecked/twemoji), licensed CC-BY 4.0. Fonts are Creepster, Pirata One and Grenze from Google Fonts (SIL Open Font License).
+
+Animated room images are [Noto Animated Emoji](https://googlefonts.github.io/noto-emoji-animation/) from Google, licensed CC-BY 4.0.

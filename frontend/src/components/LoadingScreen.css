@@ -1,0 +1,152 @@
+.loading {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: radial-gradient(ellipse at 50% 45%, rgba(58, 15, 92, 0.75), rgba(8, 2, 18, 0.92) 70%);
+  backdrop-filter: blur(5px);
+  animation: loading-in 0.35s ease-out;
+}
+@keyframes loading-in { from { opacity: 0; } }
+
+.loading-card {
+  width: min(440px, 100%);
+  text-align: center;
+}
+
+.cauldron {
+  position: relative;
+  width: clamp(120px, 22vh, 170px);
+  aspect-ratio: 1;
+  margin: 0 auto 0.5rem;
+}
+.cauldron::before {
+  content: '';
+  position: absolute;
+  inset: 12%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 140, 40, 0.45), transparent 70%);
+  filter: blur(14px);
+  animation: glow-pulse 1.6s ease-in-out infinite alternate;
+}
+.cauldron img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  opacity: 0;
+  scale: 0.7;
+  rotate: -12deg;
+  transition: opacity 0.4s, scale 0.5s cubic-bezier(0.3, 1.6, 0.5, 1), rotate 0.5s;
+}
+.cauldron img.on { opacity: 1; scale: 1; rotate: 0deg; }
+@keyframes glow-pulse { to { opacity: 0.5; scale: 1.15; } }
+
+.loading h2 {
+  margin: 0 0 1rem;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.7rem, 5vw, 2.4rem);
+  line-height: 1.1;
+  color: var(--pumpkin);
+  text-shadow: 0 0 24px rgba(255, 117, 24, 0.6);
+}
+
+.loading-steps {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  text-align: left;
+}
+.loading-steps li {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-size: 1.05rem;
+  color: rgba(189, 167, 217, 0.5);
+  transition: color 0.3s;
+}
+.loading-steps li.active { color: var(--text); }
+.loading-steps li.done { color: var(--muted); }
+.step-mark {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 22px;
+  height: 22px;
+  font-size: 0.8rem;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+}
+.loading-steps li.done .step-mark {
+  color: #1a0630;
+  background: var(--slime);
+  border-color: var(--slime);
+}
+.loading-steps li.active .step-mark {
+  border-color: var(--pumpkin) transparent var(--pumpkin) var(--pumpkin);
+  animation: spin 0.9s linear infinite;
+}
+
+.loading-bar {
+  height: 6px;
+  margin: 1.4rem auto 0;
+  width: 70%;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+}
+.loading-bar span {
+  display: block;
+  width: 40%;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, transparent, var(--pumpkin-hot), var(--pumpkin), transparent);
+  animation: sweep 1.3s ease-in-out infinite;
+}
+@keyframes sweep {
+  from { translate: -100% 0; }
+  to { translate: 250% 0; }
+}
+
+/* ---------- error screen (shares the loading overlay) ---------- */
+.error-body { margin: 0 auto; max-width: 34ch; font-size: 1.05rem; color: var(--text); }
+.error-detail {
+  margin: 0.6rem auto 0;
+  max-width: 40ch;
+  font-size: 0.85rem;
+  font-family: ui-monospace, monospace;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+.error-actions {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.4rem;
+}
+.error-actions button {
+  padding: 0.65rem 1.3rem;
+  font: inherit;
+  font-family: var(--font-label);
+  font-size: 1.1rem;
+  border-radius: 12px;
+  cursor: pointer;
+}
+.error-retry {
+  color: #1a0630;
+  background: linear-gradient(180deg, #ffc46b, var(--pumpkin) 60%, var(--pumpkin-deep));
+  border: 0;
+  box-shadow: 0 4px 0 #6b1d00, 0 0 24px rgba(255, 117, 24, 0.5);
+}
+.error-back {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--stone-edge);
+}
+.error-actions button:focus-visible { outline: 3px solid #c79bff; outline-offset: 3px; }
