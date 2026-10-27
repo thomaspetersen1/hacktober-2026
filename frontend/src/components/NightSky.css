@@ -1,0 +1,289 @@
+.night-sky {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 70% 55% at 78% 14%, rgba(186, 104, 255, 0.28), transparent 70%),
+    radial-gradient(ellipse 90% 60% at 10% 100%, rgba(255, 106, 0, 0.18), transparent 70%),
+    linear-gradient(180deg, var(--sky-top) 0%, var(--sky-mid) 55%, var(--sky-low) 100%);
+}
+
+/* ---------- stars ---------- */
+.stars {
+  position: absolute;
+  inset: 0 0 30% 0;
+  background-repeat: repeat;
+}
+.stars-a {
+  background-image:
+    radial-gradient(1.5px 1.5px at 20px 30px, #fff, transparent),
+    radial-gradient(1px 1px at 90px 120px, #ffe9c7, transparent),
+    radial-gradient(1.5px 1.5px at 160px 60px, #fff, transparent),
+    radial-gradient(1px 1px at 230px 170px, #e3cfff, transparent);
+  background-size: 260px 210px;
+  animation: twinkle 4s ease-in-out infinite alternate;
+}
+.stars-b {
+  background-image:
+    radial-gradient(1px 1px at 50px 80px, #fff, transparent),
+    radial-gradient(2px 2px at 140px 20px, #ffd59e, transparent),
+    radial-gradient(1px 1px at 300px 140px, #fff, transparent);
+  background-size: 340px 260px;
+  animation: twinkle 6s ease-in-out 2s infinite alternate-reverse;
+}
+@keyframes twinkle {
+  from { opacity: 0.25; }
+  to { opacity: 0.9; }
+}
+
+/* ---------- moon ---------- */
+.moon {
+  position: absolute;
+  top: clamp(40px, 9vh, 110px);
+  right: clamp(24px, 12vw, 220px);
+  width: clamp(130px, 17vw, 230px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 30% 35%, rgba(180, 150, 110, 0.35) 0 9%, transparent 10%),
+    radial-gradient(circle at 62% 62%, rgba(180, 150, 110, 0.3) 0 13%, transparent 14%),
+    radial-gradient(circle at 70% 28%, rgba(180, 150, 110, 0.25) 0 6%, transparent 7%),
+    radial-gradient(circle at 40% 40%, #fff8e1, #ffe2a8 55%, #f2b86b);
+  box-shadow:
+    0 0 60px 18px rgba(255, 214, 140, 0.45),
+    0 0 180px 70px rgba(255, 140, 40, 0.22);
+  animation: moon-pulse 7s ease-in-out infinite;
+}
+@keyframes moon-pulse {
+  50% {
+    box-shadow:
+      0 0 80px 26px rgba(255, 214, 140, 0.55),
+      0 0 220px 90px rgba(255, 140, 40, 0.28);
+  }
+}
+
+.moon-bat {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--size);
+  margin: calc(var(--size) / -2);
+  animation: orbit linear infinite;
+}
+.moon-bat img {
+  width: 100%;
+  filter: brightness(0) drop-shadow(0 0 2px rgba(0, 0, 0, 0.6));
+  animation: flap 0.22s ease-in-out infinite alternate;
+}
+@keyframes orbit {
+  from { transform: rotate(0deg) translateX(var(--orbit)) rotate(0deg); }
+  to { transform: rotate(360deg) translateX(var(--orbit)) rotate(-360deg); }
+}
+
+/* ---------- webs + spider ---------- */
+.web {
+  position: absolute;
+  top: -18px;
+  width: clamp(120px, 16vw, 220px);
+  opacity: 0.55;
+  filter: brightness(1.6) drop-shadow(0 0 6px rgba(220, 190, 255, 0.4));
+}
+.web-left { left: -18px; }
+.web-right { right: -18px; transform: scaleX(-1); }
+
+.spider {
+  position: absolute;
+  top: 0;
+  left: clamp(120px, 22vw, 340px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform-origin: top center;
+  animation: dangle 6s ease-in-out infinite;
+}
+.spider .thread {
+  width: 1px;
+  height: 140px;
+  background: linear-gradient(rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.55));
+}
+.spider img {
+  width: 40px;
+  margin-top: -4px;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.6));
+}
+@keyframes dangle {
+  0%, 100% { transform: translateY(-60px) rotate(2deg); }
+  50% { transform: translateY(0) rotate(-3deg); }
+}
+
+/* ---------- bats crossing the sky ---------- */
+.bat {
+  position: absolute;
+  left: 0;
+  animation: fly linear infinite;
+  will-change: transform;
+}
+.bat img {
+  display: block;
+  filter: brightness(0.25) saturate(0) drop-shadow(0 0 6px rgba(186, 104, 255, 0.55));
+  animation: flap ease-in-out infinite alternate;
+}
+@keyframes fly {
+  0% { transform: translate(-120px, 0); }
+  25% { transform: translate(25vw, 40px); }
+  50% { transform: translate(50vw, -10px); }
+  75% { transform: translate(75vw, 50px); }
+  100% { transform: translate(calc(100vw + 120px), 0); }
+}
+@keyframes flap {
+  from { transform: scaleX(1) scaleY(1); }
+  to { transform: scaleX(0.55) scaleY(1.1); }
+}
+
+/* ---------- ghost ---------- */
+.ghost {
+  position: absolute;
+  bottom: 32%;
+  left: 6%;
+  width: 70px;
+  opacity: 0.5;
+  filter: drop-shadow(0 0 18px rgba(230, 220, 255, 0.8));
+  animation: haunt 14s ease-in-out infinite;
+}
+@keyframes haunt {
+  0%, 100% { transform: translate(0, 0) rotate(-6deg); opacity: 0; }
+  15% { opacity: 0.55; }
+  50% { transform: translate(18vw, -60px) rotate(6deg); opacity: 0.45; }
+  85% { opacity: 0.5; }
+}
+
+/* ---------- haunted manor ---------- */
+.manor {
+  position: absolute;
+  inset: auto 0 0 0;
+  height: clamp(260px, 50vh, 560px);
+}
+.manor svg { position: absolute; bottom: 0; }
+.manor .hill {
+  left: 0;
+  width: 100%;
+  height: 90px;
+  fill: var(--silhouette);
+}
+.manor .house {
+  left: 2vw;
+  bottom: 38px;
+  height: calc(100% - 38px);
+  width: auto;
+  aspect-ratio: 700 / 340;
+  max-width: 96vw;
+  fill: var(--silhouette);
+  filter: drop-shadow(0 0 24px rgba(140, 60, 220, 0.35));
+}
+.manor .walls {
+  stroke: rgba(199, 155, 255, 0.28);
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+}
+.manor .trim {
+  fill: none;
+  stroke: rgba(199, 155, 255, 0.28);
+  stroke-width: 2;
+}
+.manor .branch,
+.manor .fence {
+  fill: none;
+  stroke: var(--silhouette);
+  stroke-width: 6;
+  stroke-linecap: round;
+}
+.manor .fence { stroke-width: 4; }
+.manor .windows rect,
+.manor .windows circle {
+  fill: #ffb347;
+  filter: drop-shadow(0 0 8px #ff8a1f);
+  animation: window-flicker 3.2s steps(1) infinite;
+}
+.manor .windows .mullion {
+  fill: none;
+  stroke: var(--silhouette);
+  stroke-width: 3;
+}
+.manor .windows .door {
+  fill: #ff8a1f;
+  opacity: 0.55;
+  filter: drop-shadow(0 0 10px #ff7518);
+}
+@keyframes window-flicker {
+  0%, 100% { opacity: 1; }
+  42% { opacity: 0.55; }
+  44% { opacity: 1; }
+  71% { opacity: 0.2; }
+  73% { opacity: 0.9; }
+}
+
+/* ---------- fog ---------- */
+.fog {
+  position: absolute;
+  left: -50%;
+  width: 200%;
+  height: 180px;
+  background:
+    radial-gradient(ellipse 18% 60% at 15% 60%, rgba(200, 180, 240, 0.22), transparent 70%),
+    radial-gradient(ellipse 22% 55% at 45% 50%, rgba(200, 180, 240, 0.18), transparent 70%),
+    radial-gradient(ellipse 16% 60% at 70% 65%, rgba(200, 180, 240, 0.2), transparent 70%),
+    radial-gradient(ellipse 20% 50% at 92% 55%, rgba(200, 180, 240, 0.16), transparent 70%);
+  filter: blur(8px);
+}
+.fog-a { bottom: 40px; animation: drift 38s linear infinite; }
+.fog-b { bottom: -30px; opacity: 0.8; animation: drift 56s linear infinite reverse; }
+@keyframes drift {
+  from { transform: translateX(0); }
+  to { transform: translateX(25%); }
+}
+
+/* ---------- pumpkin patch ---------- */
+.pumpkin-patch {
+  position: absolute;
+  bottom: 6px;
+  left: 0;
+  right: 0;
+  height: 120px;
+}
+.patch-pumpkin {
+  position: absolute;
+  bottom: 0;
+  animation: pumpkin-glow 2.6s ease-in-out infinite alternate;
+}
+@keyframes pumpkin-glow {
+  from { filter: drop-shadow(0 0 6px rgba(255, 120, 20, 0.5)) brightness(0.9); }
+  to { filter: drop-shadow(0 0 22px rgba(255, 150, 40, 0.95)) brightness(1.08); }
+}
+.patch-cat {
+  position: absolute;
+  bottom: 4px;
+  left: 84.5%;
+  width: 54px;
+  filter: drop-shadow(0 0 8px rgba(186, 104, 255, 0.6));
+}
+
+/* ---------- film grain ---------- */
+.grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.08;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@media (max-width: 860px) {
+  .manor .house { left: 50%; transform: translateX(-50%); height: min(calc(100% - 38px), 46vw); }
+}
+
+@media (max-width: 700px) {
+  .spider, .ghost, .web-right { display: none; }
+  .pumpkin-patch { height: 80px; }
+  .patch-pumpkin { transform: scale(0.65); transform-origin: bottom; }
+}

@@ -1,5 +1,7 @@
-import { useEffect, useState } from 'react'
-import { createPlan, getHealth } from './api/client.js'
+import { useEffect, useRef, useState } from 'react'
+import { createPlan } from './api/client.js'
+import NightSky from './components/NightSky.jsx'
+import PlanForm from './components/PlanForm.jsx'
 import './App.css'
 
 const currency = new Intl.NumberFormat('en-US', {
@@ -8,25 +10,20 @@ const currency = new Intl.NumberFormat('en-US', {
 })
 
 function App() {
-  const [budget, setBudget] = useState(500)
-  const [rooms, setRooms] = useState(4)
   const [plan, setPlan] = useState(null)
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
-  const [apiStatus, setApiStatus] = useState('checking')
+  const resultsRef = useRef(null)
 
   useEffect(() => {
-    getHealth()
-      .then(() => setApiStatus('online'))
-      .catch(() => setApiStatus('offline'))
-  }, [])
+    if (plan) resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }, [plan])
 
-  async function handleSubmit(event) {
-    event.preventDefault()
+  async function handleSubmit(request) {
     setLoading(true)
     setError(null)
     try {
-      setPlan(await createPlan({ budget: Number(budget), rooms: Number(rooms) }))
+      setPlan(await createPlan(request))
     } catch (err) {
       setError(err.message)
     } finally {
@@ -35,61 +32,55 @@ function App() {
   }
 
   return (
-    <main className="app">
-      <header>
-        <h1>Haunted House Planner</h1>
-        <p className={`status status-${apiStatus}`}>API: {apiStatus}</p>
-      </header>
+    <>
+      <NightSky />
 
-      <form className="plan-form" onSubmit={handleSubmit}>
-        <label>
-          Budget ($)
-          <input
-            type="number"
-            min="1"
-            step="1"
-            value={budget}
-            onChange={(e) => setBudget(e.target.value)}
-            required
-          />
-        </label>
-        <label>
-          Rooms
-          <input
-            type="number"
-            min="1"
-            max="12"
-            value={rooms}
-            onChange={(e) => setRooms(e.target.value)}
-            required
-          />
-        </label>
-        <button type="submit" disabled={loading}>
-          {loading ? 'Summoning…' : 'Design my haunted house'}
-        </button>
-      </form>
+      <main className="app">
+        <section className="hero">
+          <div className="hero-copy">
+            <p className="eyebrow">
+              <img src="/images/candle.svg" alt="" /> Hacktober 2026 · Est. Oct 31
+            </p>
+            <h1 className="title">
+              <span className="title-top">Haunted</span>
+              <span className="title-bottom">
+                House <em>Planner</em>
+              </span>
+            </h1>
+          
+          </div>
 
-      {error && <p className="error">{error}</p>}
-
-      {plan && (
-        <section className="plan">
-          <h2>{plan.theme}</h2>
-          <ol className="rooms">
-            {plan.rooms.map((room) => (
-              <li key={room.order} className="room-card">
-                <h3>{room.name}</h3>
-                <p>{room.concept}</p>
-                <p className="room-budget">{currency.format(room.budget)}</p>
-              </li>
-            ))}
-          </ol>
-          <p className="total">
-            Total allocated: {currency.format(plan.total_allocated)} of{' '}
-            {currency.format(plan.budget)}
-          </p>
+          <PlanForm onSubmit={handleSubmit} loading={loading} />
         </section>
-      )}
-    </main>
+
+        {error && (
+          <p className="error" role="alert">
+            <img src="/images/skull.svg" alt="" /> {error}
+          </p>
+        )}
+
+        {plan && (
+          <section className="plan" ref={resultsRef}>
+            <h2>{plan.theme}</h2>
+            <ol className="rooms">
+              {plan.rooms.map((room) => (
+                <li key={room.order} className="room-card" style={{ animationDelay: `${room.order * 90}ms` }}>
+                  <span className="room-number">{room.order}</span>
+                  <h3>{room.name}</h3>
+                  <p>{room.concept}</p>
+                  <p className="room-budget">{currency.format(room.budget)}</p>
+                </li>
+              ))}
+            </ol>
+            <p className="total">
+              Total allocated: {currency.format(plan.total_allocated)} of{' '}
+              {currency.format(plan.budget)}
+              {plan.square_feet && <> · {plan.square_feet.toLocaleString()} sq ft</>}
+            </p>
+          </section>
+        )}
+      </main>
+    </>
   )
 }
 

@@ -18,9 +18,9 @@ export function getHealth() {
   return request('/api/health')
 }
 
-export function createPlan({ budget, rooms }) {
+export function createPlan({ budget, rooms, squareFeet = null }) {
   return request('/api/plan', {
     method: 'POST',
-    body: JSON.stringify({ budget, rooms }),
+    body: JSON.stringify({ budget, rooms, square_feet: squareFeet }),
   })
 }
