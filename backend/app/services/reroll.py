@@ -3,16 +3,18 @@
 import random
 
 from app.schemas import RerollRequest, Room
-from app.services.planner import ROOM_CONCEPTS, ROOM_NAMES
+from app.services import catalog
+from app.services.planner import ROOM_NAMES, make_room
 
 
 def reroll_room(req: RerollRequest) -> Room:
-    """Pick a room that isn't already in the house.
+    """Pick a room that isn't already in the house and re-shop its props.
 
     Deterministic fallback for now; the AI stage can replace this later.
     """
-    pairs = list(zip(ROOM_NAMES, ROOM_CONCEPTS))
     avoid = {name.lower() for name in req.avoid}
-    unused = [pair for pair in pairs if pair[0].lower() not in avoid]
-    name, concept = random.choice(unused or pairs)
-    return Room(order=req.order, name=name, concept=concept, budget=round(req.budget, 2))
+    slots = list(range(len(ROOM_NAMES)))
+    unused = [slot for slot in slots if ROOM_NAMES[slot].lower() not in avoid]
+    slot = random.choice(unused or slots)
+    props, _ = catalog.get_catalog()
+    return make_room(slot, req.order, req.budget, req.square_feet, props, set())

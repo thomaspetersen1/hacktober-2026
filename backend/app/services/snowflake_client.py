@@ -11,7 +11,8 @@ from app.config import get_settings
 logger = logging.getLogger(__name__)
 
 _session: Session | None = None
-_lock = threading.Lock()
+# Reentrant: run_query holds it while get_session may need it to reconnect
+_lock = threading.RLock()
 
 
 def _build() -> Session:
@@ -26,6 +27,8 @@ def _build() -> Session:
         "warehouse": s.snowflake_warehouse,
         "database": s.snowflake_database,
         "schema": s.snowflake_schema,
+        # Fail fast so a bad login falls back to the local catalog instead of hanging
+        "login_timeout": 15,
     }
     return Session.builder.configs({k: v for k, v in params.items() if v}).create()
 
